@@ -99,7 +99,7 @@ def decode_sequence(input_seq):
     return decoded_sentence.strip()
 
 # Esempio di utilizzo
-input_sentence = "hello, how are you?"
+input_sentence = "How are you?"
 # Converte la frase di input in una sequenza numerica
 input_sequence = tokenizer.texts_to_sequences([input_sentence])
 # Padding della sequenza per avere la stessa lunghezza
