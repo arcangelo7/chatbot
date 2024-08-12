@@ -1,8 +1,9 @@
-import numpy as np
-from tensorflow.keras.models import load_model, Model
-from tensorflow.keras.layers import Input
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
+
+import numpy as np
+from tensorflow.keras.layers import Input
+from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Carica il modello e il tokenizer
 model = load_model('chatbot_model.h5')
@@ -99,7 +100,7 @@ def decode_sequence(input_seq):
     return decoded_sentence.strip()
 
 # Esempio di utilizzo
-input_sentence = "How are you?"
+input_sentence = "Quel è il senso della vita?"
 # Converte la frase di input in una sequenza numerica
 input_sequence = tokenizer.texts_to_sequences([input_sentence])
 # Padding della sequenza per avere la stessa lunghezza

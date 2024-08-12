@@ -1,8 +1,8 @@
-from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.layers import Input, LSTM, Dense, Embedding
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
+from tensorflow.keras.layers import LSTM, Dense, Embedding, Input
+from tensorflow.keras.models import Model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
 
 # Step 1: Preprocessing del Dataset
 
@@ -16,6 +16,8 @@ for i in range(0, len(lines), 2):  # Itera ogni due linee
     question = lines[i].strip().lower()  # Rimuove spazi bianchi e converte in minuscolo la domanda
     answer = lines[i + 1].strip().lower()  # Rimuove spazi bianchi e converte in minuscolo la risposta
     pairs.append((question, answer))  # Aggiungi la coppia (domanda, risposta) alla lista
+
+# pairs = [("hello", "hi"), ("how are you?", "I am fine, thank you")]
 
 # Tokenizza il testo
 questions = []
@@ -34,7 +36,7 @@ tokenizer = Tokenizer()
 # e assegna un indice a ciascuna parola basato sulla frequenza di apparizione. 
 tokenizer.fit_on_texts(questions + answers)  # Costruisce il vocabolario basato sul testo delle domande e risposte
 # texts = ["hello how are you", "I am fine thank you", "how are you doing today"]
-# Output: {'how': 1, 'are': 2, 'you': 3, 'hello': 4, 'i': 5, 'am': 6, 'fine': 7, 'thank': 8, 'doing': 9, 'today': 10}
+# Output: {'you': 1, 'how': 2, 'are': 3, 'hello': 4, 'i': 5, 'am': 6, 'fine': 7, 'thank': 8, 'doing': 9, 'today': 10}
 
 
 # La funzione texts_to_sequences della classe Tokenizer di Keras converte il testo 
@@ -57,6 +59,8 @@ tokenizer.word_index['<end>'] = end_token  # Aggiunge '<end>' al vocabolario
 
 for i in range(len(answer_sequences)):
     answer_sequences[i] = [start_token] + answer_sequences[i] + [end_token]  # Aggiunge i token di inizio e fine a ogni sequenza di risposta
+
+# answer_sequences = [[10, 5, 11], [10, 6, 7, 8, 9, 1, 11]]
 
 # Padding delle sequenze per avere tutte la stessa lunghezza
 max_length_questions = max(len(seq) for seq in question_sequences)
@@ -123,6 +127,12 @@ units = 512  # Numero di unità LSTM
 encoder_inputs = Input(shape=(max_length_questions,))  # Input del encoder con lunghezza massima delle sequenze
 
 # Strato di embedding per convertire gli indici in vettori
+# Word2Vec
+# Come funziona Word2Vec?
+    # Word2Vec può essere addestrato in due modi principali:
+        # CBOW (Continuous Bag of Words): Questo approccio predice una parola target basandosi sul contesto circostante (cioè le parole vicine).
+        # Skip-gram: Questo modello, al contrario, cerca di predire le parole di contesto a partire dalla parola target.
+# embedding("re")−embedding("uomo")+embedding("donna")≈embedding("regina")
 encoder_embedding = Embedding(vocab_size, embedding_dim)(encoder_inputs)  
 
 # L'LSTM è una versione avanzata delle reti neurali ricorrenti (RNN) 
@@ -228,6 +238,7 @@ model.save('chatbot_model.h5')
 
 # Salva il tokenizer e i parametri del modello per la successiva elaborazione
 import pickle
+
 with open('tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)
 with open('config.pkl', 'wb') as f:
