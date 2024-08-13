@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 # Step 1: Preprocessing del Dataset
 
 # Carica il dataset
-with open('dataset.txt', 'r') as file:
+with open('data/dataset.txt', 'r', encoding='utf-8') as file:
     lines = file.readlines()  # Leggi tutte le linee del file e memorizzale in una lista
 
 # Prepara le coppie domanda-risposta
@@ -231,7 +231,7 @@ decoder_target_data = answer_sequences[:, 1:]
 # validation_split=0.2 indica che il 20% dei dati sarà utilizzato per 
 # la validazione durante l'addestramento, per monitorare le prestazioni del modello su dati non visti.
 model.fit([question_sequences, decoder_input_data], decoder_target_data,
-          batch_size=64, epochs=300, validation_split=0.2)
+          batch_size=128, epochs=300, validation_split=0.2)
 
 # Step 4: Salvare il Modello
 model.save('chatbot_model.h5')
